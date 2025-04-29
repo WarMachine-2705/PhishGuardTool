@@ -1,27 +1,93 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { Mail, Key, Loader } from "lucide-react";
 
 const EmailForm = ({ onLogUpdate }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        onLogUpdate("Starting phishing detection...");
+        setIsLoading(true);
+        onLogUpdate("Starting phishing detection scan...");
 
         try {
-            const response = await axios.post("http://localhost:5000/api/email/start", { email, password });
-            onLogUpdate(response.data.message);
+            // Add a slight delay to show loading state
+            setTimeout(async () => {
+                try {
+                    const response = await axios.post("http://localhost:5000/api/email/start", { email, password });
+                    onLogUpdate(response.data.message);
+                    onLogUpdate("Scanning for suspicious patterns...");
+                } catch (error) {
+                    onLogUpdate("Error: Unable to connect to email server.");
+                    onLogUpdate("Please check your credentials and try again.");
+                } finally {
+                    setIsLoading(false);
+                }
+            }, 1000);
         } catch (error) {
             onLogUpdate("Error starting detection.");
+            setIsLoading(false);
         }
     };
 
     return (
         <form onSubmit={handleSubmit}>
-            <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-            <input type="password" placeholder="App Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-            <button type="submit">Run</button>
+            <div className="mb-3">
+                <label htmlFor="email" className="form-label text-light">
+                    Email Address
+                </label>
+                <div className="input-group">
+                    <span className="input-group-text bg-dark text-light border-light">
+                        <Mail size={16} />
+                    </span>
+                    <input
+                        id="email"
+                        type="email"
+                        className="form-control bg-dark text-light border-light"
+                        placeholder="your.email@example.com"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                    />
+                </div>
+            </div>
+            
+            <div className="mb-4">
+                <label htmlFor="password" className="form-label text-light">
+                    App Password
+                </label>
+                <div className="input-group">
+                    <span className="input-group-text bg-dark text-light border-light">
+                        <Key size={16} />
+                    </span>
+                    <input
+                        id="password"
+                        type="password"
+                        className="form-control bg-dark text-light border-light"
+                        placeholder="App Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                </div>
+            </div>
+            
+            <button
+                type="submit"
+                disabled={isLoading}
+                className="btn btn-light w-100"
+            >
+                {isLoading ? (
+                    <>
+                        <Loader size={16} className="spinner-border spinner-border-sm me-2" />
+                        Scanning...
+                    </>
+                ) : (
+                    "Start Scanning"
+                )}
+            </button>
         </form>
     );
 };
