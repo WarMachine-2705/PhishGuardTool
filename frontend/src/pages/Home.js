@@ -11,7 +11,7 @@ const Home = () => {
 
     return (
         <div className="container">
-            <h1>Phishing Email Detector</h1>
+            <h1>Phishing Email Detector Tool</h1>
             <EmailForm onLogUpdate={handleLogUpdate} />
             <Terminal logs={logs} />
         </div>
