@@ -16,7 +16,8 @@ const EmailForm = ({ onLogUpdate }) => {
             // Add a slight delay to show loading state
             setTimeout(async () => {
                 try {
-                    const response = await axios.post("http://localhost:5000/api/email/start", { email, password });
+                    const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+                    const response = await axios.post(`${API_URL}/api/email/start`, { email, password });
                     onLogUpdate(response.data.message);
                     onLogUpdate("Scanning for suspicious patterns...");
                 } catch (error) {
