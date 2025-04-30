@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from "react";
 import io from "socket.io-client";
 
-const socket = io("http://localhost:5000");
+// Use environment variable or fallback to localhost
+const SOCKET_URL = process.env.REACT_APP_SOCKET_URL || "http://localhost:5000";
+const socket = io(SOCKET_URL);
 
 const Terminal = ({ logs }) => {
     const terminalRef = useRef(null);
