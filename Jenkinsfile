@@ -41,8 +41,9 @@ pipeline {
             steps {
                 // Replace with your actual deployment steps
                 // This is an example for copying to a deploy directory
-                sh 'mkdir -p /var/www/phishguard'
-                sh 'cp -r frontend/build/* /var/www/phishguard'
+                withCredentials([sshUserPrivateKey(credentialsId: 'deploy-ssh-key', keyFileVariable: 'SSH_KEY')]) {
+                    sh 'scp -i $SSH_KEY -r frontend/build/* deployment-user@your-server:/var/www/phishguard'
+                }
             }
         }
     }
