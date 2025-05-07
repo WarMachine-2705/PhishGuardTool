@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import 'bootstrap/dist/css/bootstrap.min.css';
+//import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import PhishguardPage from "./pages/PhishguardPage";
 import About from "./pages/About";
+import './App.css';
 
 const App = () => {
   const [currentPage, setCurrentPage] = useState("home");

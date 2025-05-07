@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Mail, Key, Loader } from "lucide-react";
 
 const EmailForm = ({ onLogUpdate }) => {
     const [email, setEmail] = useState("");
@@ -13,7 +12,6 @@ const EmailForm = ({ onLogUpdate }) => {
         onLogUpdate("Starting phishing detection scan...");
 
         try {
-            // Add a slight delay to show loading state
             setTimeout(async () => {
                 try {
                     const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
@@ -41,7 +39,7 @@ const EmailForm = ({ onLogUpdate }) => {
                 </label>
                 <div className="input-group">
                     <span className="input-group-text bg-dark text-light border-light">
-                        <Mail size={16} />
+                        ✉️
                     </span>
                     <input
                         id="email"
@@ -61,7 +59,7 @@ const EmailForm = ({ onLogUpdate }) => {
                 </label>
                 <div className="input-group">
                     <span className="input-group-text bg-dark text-light border-light">
-                        <Key size={16} />
+                        🔑
                     </span>
                     <input
                         id="password"
@@ -82,7 +80,7 @@ const EmailForm = ({ onLogUpdate }) => {
             >
                 {isLoading ? (
                     <>
-                        <Loader size={16} className="spinner-border spinner-border-sm me-2" />
+                        <span className="spinner-border spinner-border-sm me-2"></span>
                         Scanning...
                     </>
                 ) : (

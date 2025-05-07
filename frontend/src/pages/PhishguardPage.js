@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import EmailForm from "../components/EmailForm";
 import Terminal from "../components/Terminal";
-import { Shield, AlertOctagon, Mail } from "lucide-react";
 
 const PhishguardPage = () => {
   const [logs, setLogs] = useState([]);
@@ -23,13 +22,13 @@ const PhishguardPage = () => {
           <div className="card bg-primary h-100">
             <div className="card-body p-4">
               <div className="d-flex align-items-center justify-content-center mb-3">
-                <Mail size={32} className="text-light me-2" />
+                <span className="h2 text-light me-2">📧</span>
                 <h2 className="h4 fw-bold mb-0">Connect Email</h2>
               </div>
               
               <div className="alert alert-warning mb-4">
                 <h3 className="h6 fw-bold d-flex align-items-center">
-                  <AlertOctagon size={16} className="me-2" />
+                  <span className="me-2">⚠️</span>
                   Security Note
                 </h3>
                 <p className="small mb-0">
@@ -55,7 +54,7 @@ const PhishguardPage = () => {
         {/* Right column: Terminal */}
         <div className="col-lg-8">
           <div className="mb-3 d-flex align-items-center">
-            <Shield size={24} className="text-primary me-2" />
+            <span className="h3 text-primary me-2">🛡️</span>
             <h2 className="h4 fw-bold mb-0">Scan Results</h2>
           </div>
           

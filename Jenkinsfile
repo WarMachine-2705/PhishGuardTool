@@ -1,59 +1,64 @@
 pipeline {
     agent any
-    
-    tools {
-        nodejs 'Node18' // Updated to match the configured name in Jenkins
+
+    environment {
+        COMPOSE_FILE = 'docker-compose.yml'
     }
-    
+
     stages {
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
-                // Get code from your repository
-                checkout scm
+                echo 'Checking out latest code from main branch...'
+                git branch: 'main', url: 'https://github.com/WarMachine-2705/PhishGuardTool.git'
             }
         }
-        
-        stage('Install Dependencies') {
+
+        stage('Build Docker Images') {
             steps {
-                dir('frontend') {
-                    sh 'npm install'
-                }
+                echo 'Building Docker images...'
+                powershell '''
+                    docker-compose down --remove-orphans
+                    try { docker-compose pull } catch { Write-Host "pull failed, continuing..." }
+                    docker-compose build --no-cache
+                '''
             }
         }
-        
-        stage('Run Tests') {
+
+        stage('Run Docker Containers') {
             steps {
-                dir('frontend') {
-                    sh 'npm test -- --watchAll=false'
-                }
+                echo 'Starting Docker containers...'
+                powershell 'docker-compose up -d'
             }
         }
-        
-        stage('Build') {
+
+        stage('Show Running Containers') {
             steps {
-                dir('frontend') {
-                    sh 'npm run build'
-                }
+                echo 'Currently running containers:'
+                powershell 'docker ps'
             }
         }
-        
-        stage('Deploy') {
+
+        stage('Show Docker Logs') {
             steps {
-                // Replace with your actual deployment steps
-                // This is an example for copying to a deploy directory
-                withCredentials([sshUserPrivateKey(credentialsId: 'deploy-ssh-key', keyFileVariable: 'SSH_KEY')]) {
-                    sh 'scp -i $SSH_KEY -r frontend/build/* deployment-user@your-server:/var/www/phishguard'
-                }
+                echo 'Fetching Docker logs...'
+                powershell 'docker-compose logs --tail=100'
             }
         }
     }
-    
+
     post {
-        success {
-            echo 'Deployment completed successfully!'
-        }
         failure {
-            echo 'Build or deployment failed'
+            echo 'Pipeline failed. Cleaning up Docker containers...'
+            powershell 'docker-compose down'
+        }
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        always {
+            echo 'Cleaning up dangling images (optional)...'
+            powershell '''
+                try { docker image prune -f } catch { Write-Host "image prune failed, continuing..." }
+            '''
         }
     }
 }
