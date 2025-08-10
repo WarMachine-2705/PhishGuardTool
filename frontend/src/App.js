@@ -12,13 +12,13 @@ const App = () => {
   const renderPage = () => {
     switch (currentPage) {
       case "home":
-        return <Home />;
+        return <Home setCurrentPage={setCurrentPage} />;
       case "phishguard":
         return <PhishguardPage />;
       case "about":
         return <About />;
       default:
-        return <Home />;
+        return <Home setCurrentPage={setCurrentPage} />;
     }
   };
 
